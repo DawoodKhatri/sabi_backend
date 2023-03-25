@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const restaurantSchema = new mongoose.Schema({
   owner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  thumbnail: {
+    fileName: { type: String, default: "thumbnail.jpg" },
+    url: { type: String, required: [true, "Please enter photo url"] },
+  },
   name: {
     type: String,
     required: [true, "Please enter a restaurant name"],
@@ -41,11 +45,8 @@ const restaurantSchema = new mongoose.Schema({
   reviews: [
     { type: mongoose.Schema.Types.ObjectId, default: [], ref: "Review" },
   ],
-  staff: {
-    chefs: [
-      { type: mongoose.Schema.Types.ObjectId, default: [], ref: "Staff" },
-    ],
-  },
+
+  chefs: [{ type: mongoose.Schema.Types.ObjectId, default: [], ref: "Chef" }],
   products: [
     {
       type: mongoose.Schema.Types.ObjectId,

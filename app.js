@@ -22,11 +22,13 @@ const user = require("./routes/user");
 const restaurant = require("./routes/restaurant");
 const product = require("./routes/product");
 const table = require("./routes/table");
+const chef = require("./routes/chef")
 
 app.use("/api", user);
 app.use("/api", restaurant);
 app.use("/api", product);
 app.use("/api", table);
+app.use("/api", chef)
 
 app.use("*", (req, res) => {
   return res.status(404).json({

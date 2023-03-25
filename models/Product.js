@@ -2,7 +2,10 @@ const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema({
   name: { type: String, required: [true, "Please enter a product name"] },
-  image: { fileName: { type: String }, url: { type: String } },
+  thumbnail: {
+    fileName: { type: String, default: "thumbnail.jpg" },
+    url: { type: String, required: [true, "Please enter thumbnail url"] },
+  },
   categories: [{ type: String }],
   cuisine: {
     type: String,

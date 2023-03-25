@@ -1,5 +1,6 @@
 const Restaurant = require("../models/Restaurant");
 const User = require("../models/User");
+const { upload, getUrl } = require("../utils/storage");
 
 exports.addRestaurant = async (req, res) => {
   try {
@@ -7,8 +8,14 @@ exports.addRestaurant = async (req, res) => {
 
     const { name, description, type, address, service, cuisines } = req.body;
 
+    const thumbnail = {
+      fileName: req.file.originalname,
+      url: await getUrl(await upload("thubnails", req.file)),
+    };
+
     const newRestaurant = {
       owner: req.user._id,
+      thumbnail,
       name,
       description,
       type,

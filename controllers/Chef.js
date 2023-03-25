@@ -1,15 +1,15 @@
 const mongoose = require("mongoose");
-const Product = require("../models/Product");
+const Chef = require("../models/Chef");
 const Restaurant = require("../models/Restaurant");
-const { uploadFile, getUrl } = require("../utils/storage");
+const { uploadFile, getUrl, deleteFile } = require("../utils/storage");
 
-exports.addProduct = async (req, res) => {
+exports.addChef = async (req, res) => {
   try {
-    const { restaurantId, name, categories, cuisine, tag, price } = req.body;
+    const { restaurantId, name, age, gender, speciality } = req.body;
 
-    const thumbnail = {
+    const photo = {
       fileName: req.file.originalname,
-      url: await uploadFile("thubnails", req.file),
+      url: await uploadFile("chefs", req.file),
     };
 
     const restaurant = await Restaurant.findById(restaurantId);
@@ -27,45 +27,43 @@ exports.addProduct = async (req, res) => {
         message: "Unauthorized",
       });
     }
-
-    const newProduct = {
+    const newChef = {
+      photo,
       name,
-      thumbnail,
-      categories,
-      cuisine,
-      tag,
-      price,
+      age,
+      gender,
+      speciality,
     };
 
-    const product = await Product.create(newProduct);
+    const chef = await Chef.create(newChef);
 
-    restaurant.products.push(product._id);
+    restaurant.chefs.push(chef._id);
     await restaurant.save();
 
     return res.status(200).json({
       success: true,
-      message: "Product added successfully",
+      message: "Chef added successfully",
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
   }
 };
 
-exports.deleteProduct = async (req, res) => {
+exports.deleteChef = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
-    if (!product) {
+    const chef = await Chef.findById(req.params.id);
+    if (!chef) {
       return res.status(404).json({
         success: false,
-        message: "Product not found",
+        message: "Chef not found",
       });
     }
 
     const restaurant = await Restaurant.findOne({
-      products: { $in: mongoose.Types.ObjectId(req.params.id) },
+      chefs: { $in: mongoose.Types.ObjectId(req.params.id) },
     });
 
     if (!restaurant) {
@@ -82,55 +80,32 @@ exports.deleteProduct = async (req, res) => {
       });
     }
 
-    product.remove();
-    await product.save();
+    await deleteFile(chef.photo.url);
 
-    const index = restaurant.products.indexOf(
+    chef.remove();
+    await chef.save();
+
+    const index = restaurant.chefs.indexOf(
       mongoose.Types.ObjectId(req.params.id)
     );
-    restaurant.products.splice(index, 1);
+    restaurant.chefs.splice(index, 1);
     await restaurant.save();
 
     return res.status(200).json({
       success: true,
-      message: "Product deleted successfully",
+      message: "Chef deleted successfully",
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
   }
 };
 
-exports.getProduct = async (req, res) => {
+exports.getRestaurantChefs = async (req, res) => {
   try {
-    const products = await Product.findById(req.params.id);
-
-    if (!products) {
-      return res.status(404).json({
-        success: false,
-        message: "Product not found",
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      data: products,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
-
-exports.getProducts = async (req, res) => {
-  try {
-    const restaurant = await Restaurant.findById(req.params.id).populate(
-      "products"
-    );
+    let restaurant = await Restaurant.findById(req.params.id).populate("chefs");
 
     if (!restaurant) {
       return res.status(404).json({
@@ -139,12 +114,36 @@ exports.getProducts = async (req, res) => {
       });
     }
 
+    for (let chef of restaurant.chefs) {
+        chef.photo.url = await getUrl(chef.photo.url);
+    }
+
     return res.status(200).json({
       success: true,
-      data: restaurant.products,
+      data: restaurant.chefs,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+exports.getAllChefs = async (req, res) => {
+  try {
+    const chefs = await Chef.find({});
+
+    for (let chef of chefs) {
+      chef.photo.url = await getUrl(chef.photo.url);
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: chefs,
+    });
+  } catch (error) {
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
