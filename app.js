@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
-  cors({ origin: ["http://localhost:3000", "https://sabi-test.onrender.com"] })
+  cors({ origin: ["http://localhost:3000", "https://sabi-dine.vercel.app"] })
 );
 
 require("dotenv").config({ path: "./config/config.env" });
