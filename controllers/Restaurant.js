@@ -94,7 +94,9 @@ exports.getUserRestaurants = async (req, res) => {
     }
 
     for (let restaurant of restaurants) {
-      restaurant.thumbnail.url = await getUrl(restaurant.thumbnail.url);
+      if (restaurant.thumbnail.url.includes("http")) {
+        restaurant.thumbnail.url = await getUrl(restaurant.thumbnail.url);
+      }
     }
 
     return res.status(200).json({
@@ -120,7 +122,9 @@ exports.getRestaurant = async (req, res) => {
       });
     }
 
-    restaurant.thumbnail.url = await getUrl(restaurant.thumbnail.url);
+    if (restaurant.thumbnail.url.includes("http")) {
+      restaurant.thumbnail.url = await getUrl(restaurant.thumbnail.url);
+    }
 
     return res.status(200).json({
       success: true,
@@ -139,7 +143,9 @@ exports.getRestaurants = async (req, res) => {
     const restaurants = await Restaurant.find({});
 
     for (let restaurant of restaurants) {
-      restaurant.thumbnail.url = await getUrl(restaurant.thumbnail.url);
+      if (restaurant.thumbnail.url.includes("http")) {
+        restaurant.thumbnail.url = await getUrl(restaurant.thumbnail.url);
+      }
     }
 
     return res.status(200).json({
