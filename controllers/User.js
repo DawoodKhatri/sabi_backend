@@ -59,8 +59,8 @@ exports.login = async (req, res) => {
 
     const options = {
       httpOnly: true,
-      sameSite: "none",
-      secure: true
+      secure: true,
+      sameSite: "none"
     };
 
     res.status(200).cookie("token", token, options).json({
@@ -77,12 +77,11 @@ exports.login = async (req, res) => {
 
 exports.getUser = async (req, res) => {
   try {
-
-    let {email, name, isBusiness} = req.user
+    let { email, name, isBusiness } = req.user;
 
     res.status(200).json({
       success: true,
-      data: {email, name, isBusiness},
+      data: { email, name, isBusiness },
     });
   } catch (error) {
     res.status(500).json({
@@ -94,11 +93,10 @@ exports.getUser = async (req, res) => {
 
 exports.logout = async (req, res) => {
   try {
-
     const options = {
       httpOnly: true,
       sameSite: "none",
-      secure: true
+      secure: true,
     };
 
     res.status(200).clearCookie("token", options).json({
