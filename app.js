@@ -13,6 +13,7 @@ app.use(
       "https://sabi-dine.vercel.app",
       "https://sabi-test.onrender.com",
     ],
+    credentials: true,
   })
 );
 
@@ -22,13 +23,15 @@ const user = require("./routes/user");
 const restaurant = require("./routes/restaurant");
 const product = require("./routes/product");
 const table = require("./routes/table");
-const chef = require("./routes/chef")
+const chef = require("./routes/chef");
+const cart = require("./routes/cart");
 
 app.use("/api", user);
 app.use("/api", restaurant);
 app.use("/api", product);
 app.use("/api", table);
-app.use("/api", chef)
+app.use("/api", chef);
+app.use("/api", cart);
 
 app.use("*", (req, res) => {
   return res.status(404).json({

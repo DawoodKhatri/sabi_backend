@@ -59,7 +59,8 @@ exports.login = async (req, res) => {
 
     const options = {
       httpOnly: true,
-      // secure: true
+      sameSite: "none",
+      secure: true
     };
 
     res.status(200).cookie("token", token, options).json({
@@ -93,7 +94,14 @@ exports.getUser = async (req, res) => {
 
 exports.logout = async (req, res) => {
   try {
-    res.status(200).clearCookie("token").json({
+
+    const options = {
+      httpOnly: true,
+      sameSite: "none",
+      secure: true
+    };
+
+    res.status(200).clearCookie("token", options).json({
       success: true,
       message: "Logged out",
     });

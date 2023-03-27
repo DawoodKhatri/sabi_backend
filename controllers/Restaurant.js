@@ -1,6 +1,6 @@
 const Restaurant = require("../models/Restaurant");
 const User = require("../models/User");
-const { upload, getUrl } = require("../utils/storage");
+const { uploadFile, getUrl, deleteFile } = require("../utils/storage");
 
 exports.addRestaurant = async (req, res) => {
   try {
@@ -10,7 +10,7 @@ exports.addRestaurant = async (req, res) => {
 
     const thumbnail = {
       fileName: req.file.originalname,
-      url: await getUrl(await upload("thubnails", req.file)),
+      url: await uploadFile("thubnails", req.file),
     };
 
     const newRestaurant = {
@@ -59,6 +59,8 @@ exports.deleteRestaurant = async (req, res) => {
       });
     }
 
+    await deleteFile(restaurant.thumbnail.url);
+
     await restaurant.remove();
 
     const user = await User.findById(req.user._id);
@@ -91,6 +93,10 @@ exports.getUserRestaurants = async (req, res) => {
       });
     }
 
+    for (let restaurant of restaurants) {
+      restaurant.thumbnail.url = await getUrl(restaurant.thumbnail.url);
+    }
+
     return res.status(200).json({
       success: true,
       data: restaurants,
@@ -114,6 +120,8 @@ exports.getRestaurant = async (req, res) => {
       });
     }
 
+    restaurant.thumbnail.url = await getUrl(restaurant.thumbnail.url);
+
     return res.status(200).json({
       success: true,
       data: restaurant,
@@ -129,6 +137,10 @@ exports.getRestaurant = async (req, res) => {
 exports.getRestaurants = async (req, res) => {
   try {
     const restaurants = await Restaurant.find({});
+
+    for (let restaurant of restaurants) {
+      restaurant.thumbnail.url = await getUrl(restaurant.thumbnail.url);
+    }
 
     return res.status(200).json({
       success: true,

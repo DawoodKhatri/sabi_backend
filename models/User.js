@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const {ObjectId} = mongoose.Schema.Types
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -21,9 +22,14 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     required: [true, "Please specify is business"],
   },
+  cart: {
+    type: ObjectId,
+    ref: "Cart",
+    default: null
+  },
   restaurants: [
     {
-      type: mongoose.Schema.Types.ObjectId,
+      type: ObjectId,
       ref: "Restaurant",
     },
   ],

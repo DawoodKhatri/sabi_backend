@@ -42,3 +42,21 @@ exports.isBusinessAuth = async (req, res, next) => {
     });
   }
 };
+
+exports.isCustomerAuth = async (req, res, next) => {
+  try {
+    if (req.user.isBusiness) {
+      return res.status(401).json({
+        success: false,
+        message: "Login with a Customer Account",
+      });
+    }
+
+    next();
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
