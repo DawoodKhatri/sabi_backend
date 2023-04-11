@@ -7,6 +7,7 @@ const productSchema = new mongoose.Schema({
     url: { type: String, required: [true, "Please enter thumbnail url"] },
   },
   categories: [{ type: String }],
+  type: { type: "String", enum: ["veg", "nonVeg", "veg&NonVeg"] },
   cuisine: {
     type: String,
   },

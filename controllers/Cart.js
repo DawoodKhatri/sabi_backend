@@ -3,6 +3,34 @@ const Restaurant = require("../models/Restaurant");
 const Cart = require("../models/Cart");
 const { ObjectId } = require("mongoose").Schema.Types;
 
+exports.getCart = async (req, res) => {
+  try {
+    let cart = req.user.cart;
+
+    if (!cart) {
+      return res.status(404).json({
+        success: false,
+        message: "Cart is empty",
+      });
+    }
+
+    cart = await Cart.findById(cart).populate([
+      "restaurant",
+      "products.product",
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      data: cart,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 exports.addProduct = async (req, res) => {
   try {
     const { id: productId } = req.params;
@@ -96,10 +124,10 @@ exports.reduceProduct = async (req, res) => {
       user.cart = null;
       await user.save();
 
-      cart.remove();
+      await cart.remove();
+    } else {
+      await cart.save();
     }
-
-    await cart.save();
 
     return res.status(200).json({
       success: true,
@@ -147,10 +175,10 @@ exports.deleteProduct = async (req, res) => {
       user.cart = null;
       await user.save();
 
-      cart.remove();
+      await cart.remove();
+    } else {
+      await cart.save();
     }
-
-    await cart.save();
 
     return res.status(200).json({
       success: true,
