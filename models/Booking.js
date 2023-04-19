@@ -8,10 +8,9 @@ const bookingSchema = new mongoose.Schema({
       products: [{ type: ObjectId, ref: "Product" }],
     },
   ],
-  table: { type: ObjectId, ref: "Table", default: null },
+  tables: [{ type: ObjectId, ref: "Table", default: null }],
   date: { type: dateType, require: [true, "Please enter booking  date"] },
-  timing: { type: String, require: [true, "Please enter booking timing"] },
-  duration: { type: Number, require: [true, "Please enter booking duration"] },
+  time_slot: { type: String, require: [true, "Please enter time slot"] },
   name: { type: String, require: [true, "Please enter name of customer"] },
   email: {
     type: String,
@@ -23,6 +22,11 @@ const bookingSchema = new mongoose.Schema({
   },
   comments: { type: String, default: "" },
   status: { type: String, default: "Pending" },
+  advance_payment: {
+    type: String,
+    require: [true, "Please pay 50% Amount in Advance"],
+  },
+  payment: { type: String, default: "Pending" },
 });
 
 module.exports = mongoose.model("Booking", bookingSchema);

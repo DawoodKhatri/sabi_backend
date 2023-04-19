@@ -25,6 +25,7 @@ const product = require("./routes/product");
 const table = require("./routes/table");
 const chef = require("./routes/chef");
 const cart = require("./routes/cart");
+const booking = require("./routes/booking");
 
 app.use("/api", user);
 app.use("/api", restaurant);
@@ -32,6 +33,7 @@ app.use("/api", product);
 app.use("/api", table);
 app.use("/api", chef);
 app.use("/api", cart);
+app.use("/api", booking);
 
 app.use("*", (req, res) => {
   return res.status(404).json({

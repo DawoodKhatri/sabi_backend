@@ -6,7 +6,6 @@ const tableSchema = new mongoose.Schema({
     type: Number,
     required: [true, "Please enter no of seats on table"],
   },
-  status: { type: String, default: "Available" },
   price: { type: Number, default: 0 },
 });
 

@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const {ObjectId} = mongoose.Schema.Types
+const { ObjectId } = mongoose.Schema.Types;
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -25,8 +25,14 @@ const userSchema = new mongoose.Schema({
   cart: {
     type: ObjectId,
     ref: "Cart",
-    default: null
+    default: null,
   },
+  bookings: [
+    {
+      type: ObjectId,
+      ref: "Booking",
+    },
+  ],
   restaurants: [
     {
       type: ObjectId,

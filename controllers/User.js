@@ -57,11 +57,15 @@ exports.login = async (req, res) => {
 
     const token = user.generateToken();
 
-    const options = {
+    let options = {
       httpOnly: true,
       secure: true,
-      sameSite: "none"
+      sameSite: "none",
     };
+
+    if (process.env.NODE_ENV === "development") {
+      options = {};
+    }
 
     res.status(200).cookie("token", token, options).json({
       success: true,
