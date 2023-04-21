@@ -114,9 +114,9 @@ exports.getRestaurantChefs = async (req, res) => {
       });
     }
 
-    for (let chef of restaurant.chefs) {
-        chef.photo.url = await getUrl(chef.photo.url);
-    }
+    // for (let chef of restaurant.chefs) {
+    //     chef.photo.url = await getUrl(chef.photo.url);
+    // }
 
     return res.status(200).json({
       success: true,
@@ -134,9 +134,9 @@ exports.getAllChefs = async (req, res) => {
   try {
     const chefs = await Chef.find({});
 
-    for (let chef of chefs) {
-      chef.photo.url = await getUrl(chef.photo.url);
-    }
+    // for (let chef of chefs) {
+    //   chef.photo.url = await getUrl(chef.photo.url);
+    // }
 
     return res.status(200).json({
       success: true,
