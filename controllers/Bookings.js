@@ -6,6 +6,7 @@ const { generateSlots } = require("../utils/booking");
 
 exports.getAvailableSlots = async (req, res) => {
   try {
+    const { date } = req.query;
     const restaurant = await Restaurant.findById(req.query.id).populate([
       "bookings",
     ]);
@@ -25,13 +26,21 @@ exports.getAvailableSlots = async (req, res) => {
       restaurant.service.close_time
     );
 
+    
+
     const slotsWithTables = allSlots.map((timeSlot) => ({
       time_slot: timeSlot,
       tables: tables.filter(
         ({ _id: tableId }) =>
           bookings.filter(
-            ({ time_slot: bookingSlot, tables: bookingTables }) =>
-              timeSlot === bookingSlot && bookingTables.includes(tableId)
+            ({
+              date: bookingDate,
+              time_slot: bookingSlot,
+              tables: bookingTables,
+            }) =>
+              date === bookingDate &&
+              timeSlot === bookingSlot &&
+              bookingTables.includes(tableId)
           ).length === 0
       ),
     }));
