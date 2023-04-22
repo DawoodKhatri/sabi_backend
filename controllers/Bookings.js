@@ -25,19 +25,20 @@ exports.getAvailableSlots = async (req, res) => {
       restaurant.service.close_time
     );
 
-    const availableTimeSlots = allSlots.filter((timeSlot) => {
-      return tables.some((table) => {
-        return !bookings.some((booking) => {
-          return (
-            booking.time_slot === timeSlot && booking.tables.includes(table)
-          );
-        });
-      });
-    });
+    const slotsWithTables = allSlots.map((timeSlot) => ({
+      time_slot: timeSlot,
+      tables: tables.filter(
+        ({ _id: tableId }) =>
+          bookings.filter(
+            ({ time_slot: bookingSlot, tables: bookingTables }) =>
+              timeSlot === bookingSlot && bookingTables.includes(tableId)
+          ).length === 0
+      ),
+    }));
 
     res.status(200).json({
       success: true,
-      data: availableTimeSlots,
+      data: slotsWithTables,
     });
   } catch (error) {
     res.status(500).json({
@@ -194,7 +195,9 @@ exports.getCustomerBookings = async (req, res) => {
 
 exports.getRestaurantBookings = async (req, res) => {
   try {
-    const restaurant = await Restaurant.findById(req.params.id).populate("bookings");
+    const restaurant = await Restaurant.findById(req.params.id).populate(
+      "bookings"
+    );
 
     return res.status(200).json({
       success: true,
