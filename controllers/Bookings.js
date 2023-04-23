@@ -26,8 +26,6 @@ exports.getAvailableSlots = async (req, res) => {
       restaurant.service.close_time
     );
 
-    
-
     const slotsWithTables = allSlots.map((timeSlot) => ({
       time_slot: timeSlot,
       tables: tables.filter(
@@ -73,6 +71,8 @@ exports.createBooking = async (req, res) => {
     } = req.body;
 
     const booking = await Booking.create({
+      restaurant: req.query.id,
+      user: req.user._id,
       orders,
       date,
       time_slot,
@@ -93,11 +93,11 @@ exports.createBooking = async (req, res) => {
     await restaurant.save();
 
     user.bookings.push(booking._id);
-    user.cart = null
+    user.cart = null;
     await user.save();
 
-    cart.remove()
-    await cart.save()
+    cart.remove();
+    await cart.save();
 
     return res.status(200).json({
       success: true,

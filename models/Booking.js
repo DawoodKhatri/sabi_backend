@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema.Types;
 
 const bookingSchema = new mongoose.Schema({
+  restaurant: { type: ObjectId, ref: "Restaurant" },
+  user: { type: ObjectId, ref: "User" },
   orders: [
     {
       chef: { type: ObjectId, ref: "Chef" },
