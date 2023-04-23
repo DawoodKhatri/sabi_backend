@@ -197,7 +197,7 @@ exports.getCustomerBookings = async (req, res) => {
     const user = await User.findById(req.user._id);
     const bookings = await Booking.find({
       _id: { $in: user.bookings },
-    }).populate("restaurant");
+    }).populate(["restaurant", "orders.chef", "orders.product", "tables"]);
 
     return res.status(200).json({
       success: true,
@@ -216,7 +216,7 @@ exports.getRestaurantBookings = async (req, res) => {
     const restaurant = await Restaurant.findById(req.params.id);
     const bookings = await Booking.find({
       _id: { $in: restaurant.bookings },
-    }).populate("user");
+    }).populate(["user", "orders.chef", "orders.product", "tables"]);
 
     return res.status(200).json({
       success: true,
