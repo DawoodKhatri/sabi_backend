@@ -1,5 +1,5 @@
 const Booking = require("../models/Booking");
-const Table = require("../models/Table");
+const Cart = require("../models/Cart");
 const Restaurant = require("../models/Restaurant");
 const User = require("../models/User");
 const { generateSlots } = require("../utils/booking");
@@ -87,12 +87,17 @@ exports.createBooking = async (req, res) => {
 
     const restaurant = await Restaurant.findById(req.query.id);
     const user = await User.findById(req.user._id);
+    const cart = await Cart.findById(user.cart);
 
     restaurant.bookings.push(booking._id);
     await restaurant.save();
 
     user.bookings.push(booking._id);
+    user.cart = null
     await user.save();
+
+    cart.remove()
+    await cart.save()
 
     return res.status(200).json({
       success: true,
