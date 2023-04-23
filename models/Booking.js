@@ -4,8 +4,9 @@ const { ObjectId } = mongoose.Schema.Types;
 const bookingSchema = new mongoose.Schema({
   orders: [
     {
-      chef: { type: ObjectId || null, ref: "Chef" },
-      products: [{ type: ObjectId, ref: "Product" }],
+      chef: { type: ObjectId, ref: "Chef" },
+      product: { type: ObjectId, ref: "Product" },
+      quantity: { type: Number },
       _id: false,
     },
   ],
