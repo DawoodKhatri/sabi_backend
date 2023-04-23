@@ -6,15 +6,6 @@ exports.addTable = async (req, res) => {
   try {
     const { restaurantId, number, seats, price } = req.body;
 
-    let table = await Table.findOne({ number });
-
-    if (table) {
-      return res.status(409).json({
-        success: false,
-        message: "Table Already Exists",
-      });
-    }
-
     const restaurant = await Restaurant.findById(restaurantId);
 
     if (!restaurant) {
@@ -31,13 +22,23 @@ exports.addTable = async (req, res) => {
       });
     }
 
+    let tableNumbers = await Table.find({ _id: { $in: restaurant.tables } });
+    tableNumbers = tableNumbers.map(({ number }) => number);
+
+    if (tableNumbers.includes(Number(number))) {
+      return res.status(409).json({
+        success: false,
+        message: "Table Already Exists",
+      });
+    }
+
     const newTable = {
       number,
       seats,
       price,
     };
 
-    table = await Table.create(newTable);
+    const table = await Table.create(newTable);
 
     restaurant.tables.push(table._id);
     await restaurant.save();

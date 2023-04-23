@@ -96,8 +96,7 @@ exports.createBooking = async (req, res) => {
     user.cart = null;
     await user.save();
 
-    cart.remove();
-    await cart.save();
+    await cart.remove();
 
     return res.status(200).json({
       success: true,
