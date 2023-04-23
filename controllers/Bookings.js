@@ -192,11 +192,14 @@ exports.rejectBooking = async (req, res) => {
 
 exports.getCustomerBookings = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).populate("bookings");
+    const user = await User.findById(req.user._id);
+    const bookings = await Booking.find({
+      _id: { $in: user.bookings },
+    }).populate("restaurant");
 
     return res.status(200).json({
       success: true,
-      data: user.bookings,
+      data: bookings,
     });
   } catch (error) {
     res.status(500).json({
@@ -208,13 +211,14 @@ exports.getCustomerBookings = async (req, res) => {
 
 exports.getRestaurantBookings = async (req, res) => {
   try {
-    const restaurant = await Restaurant.findById(req.params.id).populate(
-      "bookings"
-    );
+    const restaurant = await Restaurant.findById(req.params.id);
+    const bookings = await Booking.find({
+      _id: { $in: restaurant.bookings },
+    }).populate("user");
 
     return res.status(200).json({
       success: true,
-      data: restaurant.bookings,
+      data: bookings,
     });
   } catch (error) {
     res.status(500).json({
