@@ -60,29 +60,31 @@ exports.createBooking = async (req, res) => {
     console.log(req.body);
     const {
       orders,
+      tables,
       date,
       time_slot,
       name,
       email,
       phone,
       comments,
+      total_bill,
       advance_payment,
-      tables,
     } = req.body;
 
     const booking = await Booking.create({
       restaurant: req.query.id,
       user: req.user._id,
       orders,
+      tables,
       date,
       time_slot,
       name,
       email,
       phone,
       comments,
+      total_bill,
       advance_payment,
       payment: req.body.payment ? req.body.payment : "Pending",
-      tables,
     });
 
     const restaurant = await Restaurant.findById(req.query.id);
