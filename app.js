@@ -10,7 +10,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "https://sabi-dine.vercel.app",
+      "https://sabi.onrender.com",
+      "https://sabi-dev.onrender.com",
       "https://sabi-test.onrender.com",
     ],
     credentials: true,
