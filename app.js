@@ -17,7 +17,7 @@ app.use(
   })
 );
 
-require("dotenv").config({ path: "./config/config.env" });
+require("dotenv")
 
 const user = require("./routes/user");
 const restaurant = require("./routes/restaurant");
