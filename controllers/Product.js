@@ -5,11 +5,11 @@ const { uploadFile, getUrl } = require("../utils/storage");
 
 exports.addProduct = async (req, res) => {
   try {
-    const { restaurantId, name, categories, cuisine, tag, price } = req.body;
+    const { restaurantId, name, cuisine, tag, price, type } = req.body;
 
     const thumbnail = {
       fileName: req.file.originalname,
-      url: await uploadFile("thubnails", req.file),
+      url: await getUrl(await uploadFile("thumbnails", req.file)),
     };
 
     const restaurant = await Restaurant.findById(restaurantId);
@@ -31,10 +31,11 @@ exports.addProduct = async (req, res) => {
     const newProduct = {
       name,
       thumbnail,
-      categories,
+      categories: [],
       cuisine,
       tag,
       price,
+      type,
     };
 
     const product = await Product.create(newProduct);
