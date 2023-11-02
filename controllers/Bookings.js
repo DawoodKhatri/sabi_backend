@@ -192,6 +192,67 @@ exports.rejectBooking = async (req, res) => {
   }
 };
 
+exports.completeBooking = async (req, res) => {
+  try {
+    const booking = await Booking.findById(req.params.id);
+
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        message: "Booking not found",
+      });
+    }
+
+    booking.status = "Completed";
+    booking.message = req.query.message;
+    await booking.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Booking Completed",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+exports.rateExperience = async (req, res) => {
+  try {
+    const { bookingId, rating } = req.body;
+    const booking = await Booking.findById(bookingId);
+
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        message: "Booking not found",
+      });
+    }
+
+    if (booking.status !== "Completed") {
+      return res.status(403).json({
+        success: false,
+        message: "Booking not Completed yet",
+      });
+    }
+
+    booking.rating = rating;
+    await booking.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Booking Rated",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 exports.getCustomerBookings = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);

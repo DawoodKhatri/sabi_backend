@@ -32,6 +32,7 @@ const bookingSchema = new mongoose.Schema({
     required: [true, "Please pay 50% Amount in Advance"],
   },
   payment: { type: String, default: "Pending" },
+  rating: { type: Number, default: 0 },
 });
 
 module.exports = mongoose.model("Booking", bookingSchema);
