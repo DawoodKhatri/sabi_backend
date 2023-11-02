@@ -5,6 +5,8 @@ const {
   cancelBooking,
   confirmBooking,
   rejectBooking,
+  completeBooking,
+  rateExperience,
   getCustomerBookings,
   getRestaurantBookings,
 } = require("../controllers/Bookings");
@@ -31,6 +33,12 @@ router
 router
   .route("/booking/rejectBooking/:id")
   .delete(isAuthenticated, isBusinessAuth, rejectBooking);
+router
+  .route("/booking/completeBooking/:id")
+  .post(isAuthenticated, isBusinessAuth, completeBooking);
+router
+  .route("/booking/rateExperience")
+  .post(isAuthenticated, isCustomerAuth, rateExperience);
 router
   .route("/bookings/customer")
   .get(isAuthenticated, isCustomerAuth, getCustomerBookings);
